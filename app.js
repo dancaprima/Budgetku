@@ -1,5 +1,22 @@
 //Budget Controller
-var budgetController = (function () {})();
+var budgetController = (function () {
+    
+    var Expense = function(id, description, value){
+        this.id = id;
+        this.description = description;
+        this.value = value;
+    };
+
+    
+    var Income = function(id, description, value){
+        this.id = id;
+        this.description = description;
+        this.value = value;
+    };
+
+})();
+
+
 
 //UI Controller
 var UIController = (function () {
@@ -36,6 +53,8 @@ var UIController = (function () {
 var controller = (function (budgetCtrl, UICtrl) {
 
     var setupEventListeners = function () {
+        var DOM = UICtrl.getDOMStrings();
+        
         document
             .querySelector(DOM.inputBtn)
             .addEventListener('click', ctrlAdditem);
@@ -48,15 +67,25 @@ var controller = (function (budgetCtrl, UICtrl) {
 
     }
 
-    var DOM = UICtrl.getDOMStrings();
+   
 
     var ctrlAdditem = function () {
         //1.Get Input Data
         var input = UICtrl.getinput();
-        console.log(input)
+
         // 2.Add the item to the budget controller 3.Add the items to the UI 4.Calculate
         // the budget 5.Display the budget on the UI
 
     }
 
+    return {
+        init: function(){
+            console.log('Application has started');
+            setupEventListeners();
+        },
+    }
+
 })(budgetController, UIController);
+
+//initialize and running all code inside an IIFE
+controller.init();
