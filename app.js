@@ -60,6 +60,24 @@ var budgetController = (function () {
 
             return newItem
         },
+        deleteItem: function(type, id){
+            var ids , index;
+            
+           
+            var ids =  data.allItems[type].map(function(curr){
+                return curr.id;
+            })
+           
+            
+            index = ids.indexOf(id);
+           
+            if(index !== -1){
+                data.allItems[type].splice(index, 1)
+            }
+         
+
+            
+        },
 
         calculateBudget: function () {
             calculateTotal('expense');
@@ -94,7 +112,8 @@ var UIController = (function () {
         budgetLabel : '.budget__value',
         incomeLabel : '.budget__income--value',
         expenseLabel: '.budget__expenses--value',
-        percentageLabel: '.budget__expenses--percentage'
+        percentageLabel: '.budget__expenses--percentage',
+        container: '.container'
     };
     return {
         getinput: function () {
@@ -135,6 +154,10 @@ var UIController = (function () {
             document
                 .querySelector(element)
                 .insertAdjacentHTML('beforeend', newHtml);
+        },
+        deleteListItem: function(selectorID){
+            var el = document.getElementById(selectorID);
+            el.parentNode.removeChild(el);
         },
         clearFields: function () {
             var fields,
@@ -186,6 +209,8 @@ var controller = (function (budgetCtrl, UICtrl) {
             }
         });
 
+        document.querySelector(DOM.container).addEventListener('click', ctrlDeletItem);
+
     }
 
     var updateBudget = function () {
@@ -194,7 +219,12 @@ var controller = (function (budgetCtrl, UICtrl) {
         //  5.Display the budget on the UI
         var budget = budgetCtrl.getBudget();
 
-        UICtrl.displayBudget(budget)
+        UICtrl.displayBudget(budget);
+        
+    }
+
+    var updatePercentages = function(){
+        
     }
 
     var ctrlAdditem = function () {
@@ -210,8 +240,27 @@ var controller = (function (budgetCtrl, UICtrl) {
 
             UICtrl.clearFields();
             
+            updateBudget();
+
+            updatePercentages();
+        }
+    }
+    var ctrlDeletItem = function(event){
+        var itemID,type, ID;
+        itemID = event.target.parentNode.parentNode.parentNode.parentNode.id;
+
+        if(itemID){
+            splitID = itemID.split('-')
+            type = splitID[0];
+            ID = parseInt(splitID[1]);
+
+            budgetCtrl.deleteItem(type, ID)
+
+            UICtrl.deleteListItem(itemID);
 
             updateBudget();
+
+            updatePercentages();
         }
     }
 
